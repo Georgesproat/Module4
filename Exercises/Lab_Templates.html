@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #card-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+      }
+
+      .card {
+        width: 300px;
+        padding: 20px;
+        border: 2px solid #ddd;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+      }
+
+      .card-title {
+        font-weight: 600;
+        font-size: 1.5em;
+        margin-bottom: 10px;
+      }
+
+      .card-text {
+        font-size: 1.2em;
+        color: #444;
+      }
+    </style>
+  </head>
+  <body>
+    <template id="profile-card-template">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title"></h2>
+          <div class="card-text"></div>
+        </div>
+      </div>
+    </template>
+
+    <template id="portfolio-card-template">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title"></h2>
+          <div class="card-text"></div>
+          <div class="portfolio"></div>
+        </div>
+      </div>
+    </template>
+
+    <div id="card-list"></div>
+    <script>
+      const cards = [
+        { title: "card#1", text: "this is card 1 text." },
+        { title: "card#2", text: "this is card 2 text." },
+        { title: "card#3", text: "this is card 3 text." }
+      ];
+
+      const artists = [
+        {
+          name: "Van Gogh",
+          age: 37,
+          portfolio: [
+            {
+              title: "portrait",
+              url: "https://collectionapi.metmuseum.org/api/collection/v1/iiif/436532/1671316/main-image"
+            },
+            {
+              title: "sky",
+              url: "https://mymodernmet.com/wp/wp-content/uploads/2020/11/White-house-night-van-goh-worldwide-2.jpg"
+            }
+          ]
+        },
+        {
+          name: "Banksy",
+          age: 102,
+          portfolio: [
+            {
+              title: "pic 1",
+              url: "data:image/jpeg;base64,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"
+            }
+          ]
+        },
+        {
+          name: "Leonardo Dicaprio",
+          age: " nothing over 25",
+          portfolio: [
+            {
+              title: "smile",
+              url: "https://upload.wikimedia.org/wikipedia/commons/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg"
+            }
+          ]
+        },
+        { name: "Bob", age: 23 },
+        { name: "Alice", age: 39 },
+        { name: "George", age: 27 }
+      ];
+
+      function createProfileCard(card) {
+        const template = document.getElementById("profile-card-template");
+        const cardElement = template.content.cloneNode(true);
+        cardElement.querySelector(".card-title").innerText = card.title;
+        cardElement.querySelector(".card-text").innerText = card.text;
+        return cardElement;
+      }
+
+      function createArtistCard(artist) {
+        const template = document.getElementById("portfolio-card-template");
+        const cardElement = template.content.cloneNode(true);
+        cardElement.querySelector(".card-title").innerText = artist.name;
+
+        if (artist.portfolio) {
+          const portfolioDiv = cardElement.querySelector(".portfolio");
+          artist.portfolio.forEach((artwork) => {
+            const artworkDiv = document.createElement("div");
+            artworkDiv.innerHTML = `<img src="${artwork.url}" alt="${artwork.title}" width="200">`;
+            portfolioDiv.appendChild(artworkDiv);
+          });
+          cardElement.querySelector(
+            ".card-text"
+          ).innerText = `Age: ${artist.age}`;
+        } else {
+          cardElement.querySelector(".portfolio").remove();
+          cardElement.querySelector(
+            ".card-text"
+          ).innerText = `Age: ${artist.age}`;
+        }
+
+        return cardElement;
+      }
+
+      function addCardToPage(card) {
+        document.querySelector("#card-list").appendChild(card);
+      }
+
+      if ("content" in document.createElement("template")) {
+        cards.forEach((loopCard) => {
+          const card = createProfileCard(loopCard);
+          addCardToPage(card);
+        });
+
+        artists.forEach((loopArtist) => {
+          const card = createArtistCard(loopArtist);
+          addCardToPage(card);
+        });
+      }
+    </script>
+  </body>
+</html>
