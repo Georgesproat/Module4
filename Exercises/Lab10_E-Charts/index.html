@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FakeStoreApi Category Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="main" style="width: 900px; height: 600px"></div>
+    <script type="text/javascript">
+      fetch("https://fakestoreapi.com/products")
+        .then((response) => response.json())
+        .then((products) => {
+          const categoryCounts = {};
+          products.forEach((product) => {
+            if (categoryCounts[product.category]) {
+              categoryCounts[product.category]++;
+            } else {
+              categoryCounts[product.category] = 1;
+            }
+          });
+
+          const categories = Object.keys(categoryCounts);
+          const data = categories.map((category) => categoryCounts[category]);
+
+          var myChart = echarts.init(document.getElementById("main"));
+
+          var option = {
+            title: {
+              text: "Number of Items Listed Under Each Category"
+            },
+            xAxis: {
+              data: categories
+            },
+            yAxis: {},
+            series: [
+              {
+                name: "Items",
+                type: "bar",
+                data: data
+              }
+            ]
+          };
+
+          myChart.setOption(option);
+        });
+    </script>
+  </body>
+</html>
